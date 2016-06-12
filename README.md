@@ -1,9 +1,14 @@
 # Installation
 
+This command line is for checking for words inside folders, for example to check if there are breakpoints to inspect the source code.
+
 Run the command
 
 ```bash
     go get github.com/mrkaspa/gospector
+    cd github.com/mrkaspa/gospector
+    godep restore
+    go install
 ```
 
 Use the command 
