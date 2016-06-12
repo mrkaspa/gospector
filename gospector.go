@@ -22,7 +22,7 @@ func createGospector(dir string, config *gospectorConf) *gospector {
 	g := &gospector{
 		dir:        dir,
 		config:     config,
-		extToWords: make(map[string]([]string)),
+		extToWords: make(map[string]([]string), len(config.Rules)),
 	}
 
 	for _, rule := range g.config.Rules {
