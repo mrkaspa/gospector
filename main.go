@@ -18,16 +18,16 @@ const VERSION = "1.0.0"
 func main() {
 	app := cli.NewApp()
 	app.Name = "gospector"
-	app.Usage = ""
+	app.Usage = "Check the README.md here httpds://github.com/mrkaspa/gospector"
 	app.Version = VERSION
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "dir",
-			Usage: "",
+			Usage: "Directory to gospect",
 		},
 		cli.StringFlag{
 			Name:  "config",
-			Usage: "",
+			Usage: "Config file for gospector",
 		},
 	}
 	app.Action = func(c *cli.Context) error {
