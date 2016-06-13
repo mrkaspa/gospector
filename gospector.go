@@ -39,10 +39,10 @@ func createGospector(dir string, config *gospectorConf) *gospector {
 }
 
 func (g *gospector) execute() []error {
-	return g.executeDir(g.dir)
+	return g.executeDir(g.dir, true)
 }
 
-func (g *gospector) executeDir(dir string) []error {
+func (g *gospector) executeDir(dir string, checkFiles bool) []error {
 	errArr := []error{}
 	files, err := filepath.Glob(dir + "/*")
 	if err != nil {
@@ -51,10 +51,10 @@ func (g *gospector) executeDir(dir string) []error {
 
 	for _, fileName := range files {
 		file, _ := os.Stat(fileName)
-		if file.IsDir() && g.shouldExecuteDir(fileName) {
-			errRet := g.executeDir(fileName)
+		if shouldExec, checkFiles := g.shouldExecuteDir(fileName); file.IsDir() &&  shouldExec {
+			errRet := g.executeDir(fileName, checkFiles)
 			errArr = append(errArr, errRet...)
-		} else if g.shouldExecuteFile(fileName) {
+		} else if checkFiles && g.shouldExecuteFile(fileName) {
 			errRet := g.executeFile(fileName)
 			errArr = append(errArr, errRet...)
 		}
@@ -102,14 +102,17 @@ func (g *gospector) shouldExecuteFile(file string) bool {
 	return false
 }
 
-func (g *gospector) shouldExecuteDir(dir string) bool {
+func (g *gospector) shouldExecuteDir(dir string) (bool, bool) {
 	if len(g.config.Subdirs) == 0 {
-		return true
+		return true, true
 	}
 	for _, subdir := range g.config.Subdirs {
-		if strings.LastIndex(dir, g.dir+"/"+subdir) == 0 {
-			return true
+		fullSubdir := g.dir+"/"+subdir
+		if strings.LastIndex(dir, fullSubdir) == 0 {
+			return true, true
+		}else if strings.LastIndex(fullSubdir, dir) == 0 {
+			return true, false
 		}
 	}
-	return false
+	return false, false
 }
