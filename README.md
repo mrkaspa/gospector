@@ -57,7 +57,8 @@ A gospector.json looks like this:
       ]
     }
   ],
-  "subdirs": ["spec", "webpack"]
+  "subdirs": ["spec", "webpack"],
+  "excluded": ["app/assets"]
 }
 
 ```

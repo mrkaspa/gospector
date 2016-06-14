@@ -11,5 +11,8 @@
   ],
   "subdirs": [
     "demo"
+  ],
+  "excluded": [
+
   ]
 }

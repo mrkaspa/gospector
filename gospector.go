@@ -103,14 +103,22 @@ func (g *gospector) shouldExecuteFile(file string) bool {
 }
 
 func (g *gospector) shouldExecuteDir(dir string) (bool, bool) {
-	if len(g.config.Subdirs) == 0 {
+	if len(g.config.Subdirs) == 0 && len(g.config.Excluded) == 0 {
 		return true, true
 	}
+
+	for _, ex := range g.config.Excluded {
+		fullSubdir := g.dir + "/" + ex
+		if strings.LastIndex(dir, fullSubdir) == 0 {
+			return false, false
+		}
+	}
+
 	for _, subdir := range g.config.Subdirs {
-		fullSubdir := g.dir+"/"+subdir
+		fullSubdir := g.dir + "/" + subdir
 		if strings.LastIndex(dir, fullSubdir) == 0 {
 			return true, true
-		}else if strings.LastIndex(fullSubdir, dir) == 0 {
+		} else if strings.LastIndex(fullSubdir, dir) == 0 {
 			return true, false
 		}
 	}
