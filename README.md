@@ -40,6 +40,7 @@ A gospector.json looks like this:
 {
   "rules": [
     {
+      "trailing_spaces": true,
       "extensions": [
         ".rb"
       ],
@@ -48,6 +49,7 @@ A gospector.json looks like this:
       ]
     },
     {
+      "trailing_spaces": true,  
       "extensions": [
         ".js"
       ],

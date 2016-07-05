@@ -16,6 +16,7 @@ type gospector struct {
 	dir        string
 	config     *gospectorConf
 	extToWords map[string]([]string)
+	extToTrailing map[string](bool)
 }
 
 func createGospector(dir string, config *gospectorConf) *gospector {
@@ -23,6 +24,7 @@ func createGospector(dir string, config *gospectorConf) *gospector {
 		dir:        dir,
 		config:     config,
 		extToWords: make(map[string]([]string), len(config.Rules)),
+		extToTrailing: make(map[string](bool), len(config.Rules)),
 	}
 
 	for _, rule := range g.config.Rules {
@@ -32,6 +34,7 @@ func createGospector(dir string, config *gospectorConf) *gospector {
 			} else {
 				g.extToWords[ext] = rule.Words
 			}
+			g.extToTrailing[ext] = rule.Trailing
 		}
 	}
 
@@ -72,6 +75,7 @@ func (g *gospector) executeFile(file string) []error {
 
 	fileExt := filepath.Ext(file)
 	words := g.extToWords[fileExt]
+	trailing := g.extToTrailing[fileExt]
 	reader := bufio.NewReader(fileOpened)
 	lineNumber := 0
 	for {
@@ -80,6 +84,10 @@ func (g *gospector) executeFile(file string) []error {
 			break
 		}
 		lineNumber++
+		if trailing && strings.HasSuffix(line, " \n"){
+			errorMessage := fmt.Sprintf("%s => trailing space found %d", file, lineNumber)
+			errArr = append(errArr, errors.New(errorMessage))
+		}
 		for _, word := range words {
 			if strings.Contains(line, word) {
 				errorMessage := fmt.Sprintf("%s => %s found on line %d", file, word, lineNumber)

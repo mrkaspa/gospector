@@ -9,4 +9,5 @@ type gospectorConf struct {
 type rule struct {
 	Extensions []string `json:"extensions"`
 	Words      []string `json:"words"`
+	Trailing bool `json:"trailing_spaces"`
 }
