@@ -69,6 +69,7 @@ func (g *gospector) executeDir(dir string, checkFiles bool) []error {
 func (g *gospector) executeFile(file string) []error {
 	errArr := []error{}
 	fileOpened, err := os.Open(file)
+	defer fileOpened.Close()
 	if err != nil {
 		return append(errArr, err)
 	}
