@@ -13,9 +13,9 @@ import (
 )
 
 type gospector struct {
-	dir        string
-	config     *gospectorConf
-	extToWords map[string]([]string)
+	dir           string
+	config        *gospectorConf
+	extToWords    map[string]([]string)
 	extToTrailing map[string](bool)
 }
 
@@ -45,7 +45,7 @@ func (g *gospector) execute() []error {
 	return g.executeDir(g.dir, true)
 }
 
-func (g *gospector) executeDir(dir string, checkFiles bool) []error {
+func (g *gospector) executeDir(dir string, checkFilesCurrentDir bool) []error {
 	errArr := []error{}
 	files, err := filepath.Glob(dir + "/*")
 	if err != nil {
@@ -54,12 +54,17 @@ func (g *gospector) executeDir(dir string, checkFiles bool) []error {
 
 	for _, fileName := range files {
 		file, _ := os.Stat(fileName)
-		if shouldExec, checkFiles := g.shouldExecuteDir(fileName); file.IsDir() &&  shouldExec {
-			errRet := g.executeDir(fileName, checkFiles)
-			errArr = append(errArr, errRet...)
-		} else if checkFiles && g.shouldExecuteFile(fileName) {
-			errRet := g.executeFile(fileName)
-			errArr = append(errArr, errRet...)
+		if file.IsDir() {
+			shouldGoDir, checkFilesIterDir := g.shouldExecuteDir(fileName)
+			if shouldGoDir {
+				errRet := g.executeDir(fileName, checkFilesIterDir)
+				errArr = append(errArr, errRet...)
+			}
+		} else {
+			if checkFilesCurrentDir && g.shouldExecuteFile(fileName) {
+				errRet := g.executeFile(fileName)
+				errArr = append(errArr, errRet...)
+			}
 		}
 	}
 
@@ -85,7 +90,7 @@ func (g *gospector) executeFile(file string) []error {
 			break
 		}
 		lineNumber++
-		if trailing && strings.HasSuffix(line, " \n"){
+		if trailing && strings.HasSuffix(line, " \n") {
 			errorMessage := fmt.Sprintf("%s => trailing space found %d", file, lineNumber)
 			errArr = append(errArr, errors.New(errorMessage))
 		}
@@ -111,6 +116,9 @@ func (g *gospector) shouldExecuteFile(file string) bool {
 	return false
 }
 
+/*shouldExecuteDir the first return means if should go deeper in the
+directory and the second return means if you should exec the checker
+on files in this directory*/
 func (g *gospector) shouldExecuteDir(dir string) (bool, bool) {
 	if len(g.config.Subdirs) == 0 && len(g.config.Excluded) == 0 {
 		return true, true
