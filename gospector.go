@@ -53,8 +53,11 @@ func (g *gospector) executeDir(dir string, checkFilesCurrentDir bool) []error {
 	}
 
 	for _, fileName := range files {
-		file, _ := os.Stat(fileName)
-		if file.IsDir() {
+		fileStat, err := os.Stat(fileName)
+		if err != nil{
+			continue
+		}
+		if fileStat.IsDir() {
 			shouldGoDir, checkFilesIterDir := g.shouldExecuteDir(fileName)
 			if shouldGoDir {
 				errRet := g.executeDir(fileName, checkFilesIterDir)
