@@ -21,9 +21,9 @@ type gospector struct {
 
 func createGospector(dir string, config *gospectorConf) *gospector {
 	g := &gospector{
-		dir:        dir,
-		config:     config,
-		extToWords: make(map[string]([]string), len(config.Rules)),
+		dir:           dir,
+		config:        config,
+		extToWords:    make(map[string]([]string), len(config.Rules)),
 		extToTrailing: make(map[string](bool), len(config.Rules)),
 	}
 
@@ -54,7 +54,7 @@ func (g *gospector) executeDir(dir string, checkFilesCurrentDir bool) []error {
 
 	for _, fileName := range files {
 		fileStat, err := os.Stat(fileName)
-		if err != nil{
+		if err != nil {
 			continue
 		}
 		if fileStat.IsDir() {
