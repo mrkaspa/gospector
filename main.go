@@ -13,13 +13,13 @@ import (
 	"github.com/codegangsta/cli"
 )
 
-const VERSION = "1.0.1"
+const version = "1.0.1"
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "gospector"
 	app.Usage = "Check the README.md here httpds://github.com/mrkaspa/gospector"
-	app.Version = VERSION
+	app.Version = version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "dir",
@@ -66,13 +66,13 @@ func run(c *cli.Context) error {
 	g := createGospector(dir, config)
 	errors := g.execute()
 	if len(errors) > 0 {
-		fmt.Println("\n****WORDS FOUND****\n")
+		fmt.Print("\n****WORDS FOUND****\n")
 		for _, err := range errors {
 			fmt.Println(err)
 			fmt.Println()
 		}
 	} else {
-		fmt.Println("\n<< O K >>\n")
+		fmt.Print("\n<< O K >>\n")
 	}
 	return nil
 }

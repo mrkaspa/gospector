@@ -138,7 +138,8 @@ func (g *gospector) shouldExecuteDir(dir string) (bool, bool) {
 		fullSubdir := g.dir + "/" + subdir
 		if strings.LastIndex(dir, fullSubdir) == 0 {
 			return true, true
-		} else if strings.LastIndex(fullSubdir, dir) == 0 {
+		}
+		if strings.LastIndex(fullSubdir, dir) == 0 {
 			return true, false
 		}
 	}
