@@ -77,10 +77,10 @@ func (g *gospector) executeDir(dir string, checkFilesCurrentDir bool) []error {
 func (g *gospector) executeFile(file string) []error {
 	errArr := []error{}
 	fileOpened, err := os.Open(file)
-	defer fileOpened.Close()
 	if err != nil {
 		return append(errArr, err)
 	}
+	defer fileOpened.Close()
 
 	fileExt := filepath.Ext(file)
 	words := g.extToWords[fileExt]
