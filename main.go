@@ -37,7 +37,10 @@ func main() {
 		}
 		return err
 	}
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		fmt.Printf("Error %s\n", err)
+	}
 }
 
 func run(c *cli.Context) error {
