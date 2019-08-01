@@ -14,13 +14,13 @@ import (
 
 type gospector struct {
 	dir           string
-	config        *gospectorConf
+	config        gospectorConf
 	extToWords    map[string]([]string)
 	extToTrailing map[string](bool)
 }
 
-func createGospector(dir string, config *gospectorConf) *gospector {
-	g := &gospector{
+func createGospector(dir string, config gospectorConf) gospector {
+	g := gospector{
 		dir:           dir,
 		config:        config,
 		extToWords:    make(map[string]([]string), len(config.Rules)),

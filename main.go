@@ -66,7 +66,7 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	g := createGospector(dir, config)
+	g := createGospector(dir, *config)
 	errors := g.execute()
 	if len(errors) > 0 {
 		fmt.Print("\n****WORDS FOUND****\n")
